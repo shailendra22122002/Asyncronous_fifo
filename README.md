@@ -1,5 +1,6 @@
 Here’s a detailed analysis of the asynchronous FIFO code you provided, including its key components, functionality, and design considerations.
-ode Structure and Components
+
+Code Structure and Components......
 
 1-Module Declaration:
 
