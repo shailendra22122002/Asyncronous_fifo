@@ -162,9 +162,11 @@ The full flag should remain 0 until the FIFO reaches capacity.
 
 
 Output simulation....
+
 ![image](https://github.com/user-attachments/assets/d01b2ce7-bd0e-4454-97bd-fa68e4a9f846)
 
 Expected Output Format:
+
 ![image](https://github.com/user-attachments/assets/27734b49-087f-4f5d-95d8-c216f8b5c655)
 
 
