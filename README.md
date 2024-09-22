@@ -88,6 +88,7 @@ More Robust Testing: The testbench could be expanded to cover edge cases and str
 
 
 Testbench Structure......
+
 ![image](https://github.com/user-attachments/assets/3dc8d571-3780-4496-8467-620aaab19d5f)
 
 This section generates two clocks: wr_clk for writing at 100 MHz and rd_clk for reading at 50 MHz.
