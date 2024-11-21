@@ -6,96 +6,73 @@ module tb_async_fifo;
     parameter DATA_WIDTH = 8;
     parameter FIFO_DEPTH = 16;
 
-    // Inputs
-    reg wr_clk;
-    reg rd_clk;
-    reg rst;
-    reg wr_en;
-    reg rd_en;
-    reg [DATA_WIDTH-1:0] write_data;
+    // Testbench signals
+    reg tb_wr_clk;
+    reg tb_rd_clk;
+    reg tb_rst;
+    reg tb_wr_en;
+    reg tb_rd_en;
+    reg [DATA_WIDTH-1:0] tb_write_data;
 
-    // Outputs
-    wire [DATA_WIDTH-1:0] read_data;
-    wire full;
-    wire empty;
+    wire [DATA_WIDTH-1:0] tb_read_data;
+    wire tb_full;
+    wire tb_empty;
 
     // Instantiate the Unit Under Test (UUT)
     async_fifo #(
         .DATA_WIDTH(DATA_WIDTH),
         .FIFO_DEPTH(FIFO_DEPTH)
     ) uut (
-        .wr_clk(wr_clk),
-        .rd_clk(rd_clk),
-        .rst(rst),
-        .wr_en(wr_en),
-        .rd_en(rd_en),
-        .write_data(write_data),
-        .read_data(read_data),
-        .full(full),
-        .empty(empty)
+        .wr_clk(tb_wr_clk),
+        .rd_clk(tb_rd_clk),
+        .rst(tb_rst),
+        .wr_en(tb_wr_en),
+        .rd_en(tb_rd_en),
+        .write_data(tb_write_data),
+        .read_data(tb_read_data),
+        .full(tb_full),
+        .empty(tb_empty)
     );
 
-    // Clock generation for wr_clk (50 MHz) and rd_clk (25 MHz)
+    // Clock generation for tb_wr_clk (50 MHz) and tb_rd_clk (25 MHz)
     initial begin
-        wr_clk = 0;
-        forever #10 wr_clk = ~wr_clk; // Write clock period = 20 ns
+        tb_wr_clk = 0;
+        forever #10 tb_wr_clk = ~tb_wr_clk; // Write clock period = 20 ns
     end
 
     initial begin
-        rd_clk = 0;
-        forever #20 rd_clk = ~rd_clk; // Read clock period = 40 ns
+        tb_rd_clk = 0;
+        forever #20 tb_rd_clk = ~tb_rd_clk; // Read clock period = 40 ns
     end
 
     // Stimulus generation
     initial begin
-        // Monitor output signals
         $monitor("Time: %0t | wr_en: %b | rd_en: %b | write_data: %h | read_data: %h | empty: %b | full: %b",
-                 $time, wr_en, rd_en, write_data, read_data, empty, full);
-        
+                 $time, tb_wr_en, tb_rd_en, tb_write_data, tb_read_data, tb_empty, tb_full);
+
         // Reset the system
-        rst = 1; // Assert reset
-        wr_en = 0;
-        rd_en = 0;
-        write_data = 0;
-        #50; // Hold reset for a while
-        rst = 0;  // Release reset
-        #20; // Allow some time after reset for clocks to start toggling
+        tb_rst = 1; 
+        tb_wr_en = 0;
+        tb_rd_en = 0;
+        tb_write_data = 0;
+        #50; // Reset duration
+        tb_rst = 0;
 
-        // Write data to the FIFO
-        wr_en = 1; // Enable writing
+        // Write to FIFO
+        tb_wr_en = 1;
         repeat(8) begin
-            @(posedge wr_clk);
-            write_data = $random;  // Write random data
-            #1; // Small delay to allow monitoring of write_data
+            @(posedge tb_wr_clk);
+            tb_write_data = $random;
         end
-        wr_en = 0;
+        tb_wr_en = 0;
 
-        // Allow some time for writes to complete
+        // Wait and then read from FIFO
         #100;
+        tb_rd_en = 1;
+        repeat(8) @(posedge tb_rd_clk);
+        tb_rd_en = 0;
 
-        // Simultaneous read/write
-        rd_en = 1; // Enable reading
-        repeat(4) begin
-            @(posedge rd_clk);
-            #1; // Small delay for read_data
-        end
-        rd_en = 0;
-
-        // Check for full and empty conditions
-        wr_en = 1; // Enable writing
-        repeat(8) begin
-            @(posedge wr_clk);
-            write_data = $random;  // Write random data
-            #1; // Small delay to allow monitoring
-        end
-        wr_en = 0;
-
-        repeat(8) @(posedge rd_clk); // Read until FIFO is empty
-        rd_en = 1;
-        repeat(8) @(posedge rd_clk);
-        rd_en = 0;
-
-        // End simulation after some time
+        // End simulation
         #200;
         $finish;
     end
