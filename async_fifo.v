@@ -1,16 +1,16 @@
 module async_fifo #(
-    parameter DATA_WIDTH = 8,  // Data width
+    parameter DATA_WIDTH = 8,   // Data width
     parameter FIFO_DEPTH = 16  // FIFO depth (must be a power of 2)
 )(
-    input wr_clk,              // Write clock
-    input rd_clk,              // Read clock
-    input rst,                 // Asynchronous reset
-    input wr_en,               // Write enable
-    input rd_en,               // Read enable
+    input wr_clk,                // Write clock
+    input rd_clk,                // Read clock
+    input rst,                   // Asynchronous reset
+    input wr_en,                 // Write enable
+    input rd_en,                 // Read enable
     input [DATA_WIDTH-1:0] write_data,  // Data to write
-    output reg [DATA_WIDTH-1:0] read_data,  // Data being read
-    output full,               // FIFO full status
-    output empty               // FIFO empty status
+    output reg [DATA_WIDTH-1:0] read_data, // Data being read
+    output full,                 // FIFO full status
+    output empty                 // FIFO empty status
 );
 
     // FIFO memory storage
