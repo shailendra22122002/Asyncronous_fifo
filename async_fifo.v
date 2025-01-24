@@ -1,22 +1,20 @@
 module async_fifo #(
-    parameter DATA_WIDTH = 8,   // Data width
-    parameter FIFO_DEPTH = 16  // FIFO depth (must be a power of 2)
+    parameter DATA_WIDTH = 8,   
+    parameter FIFO_DEPTH = 16  
 )(
-    input wr_clk,                // Write clock
-    input rd_clk,                // Read clock
-    input rst,                   // Asynchronous reset
-    input wr_en,                 // Write enable
-    input rd_en,                 // Read enable
-    input [DATA_WIDTH-1:0] write_data,  // Data to write
-    output reg [DATA_WIDTH-1:0] read_data, // Data being read
-    output full,                 // FIFO full status
-    output empty                 // FIFO empty status
+    input wr_clk,                
+    input rd_clk,                
+    input rst,                   
+    input wr_en,                 
+    input rd_en,                 
+    input [DATA_WIDTH-1:0] write_data,  
+    output reg [DATA_WIDTH-1:0] read_data, 
+    output full,               
+    output empty                 
 );
 
-    // FIFO memory storage
+    
     reg [DATA_WIDTH-1:0] mem [FIFO_DEPTH-1:0];
-
-    // Read and write pointers (binary and Gray code)
     reg [clog2(FIFO_DEPTH):0] wptr, rptr;
     wire [clog2(FIFO_DEPTH):0] wptr_gray, rptr_gray;
 
