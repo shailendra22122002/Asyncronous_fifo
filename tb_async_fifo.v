@@ -6,7 +6,6 @@ module tb_async_fifo;
     parameter DATA_WIDTH = 8;
     parameter FIFO_DEPTH = 16;
 
-    // Testbench signals
     reg tb_wr_clk;
     reg tb_rd_clk;
     reg tb_rst;
@@ -18,7 +17,6 @@ module tb_async_fifo;
     wire tb_full;
     wire tb_empty;
 
-    // Instantiate the Unit Under Test (UUT)
     async_fifo #(
         .DATA_WIDTH(DATA_WIDTH),
         .FIFO_DEPTH(FIFO_DEPTH)
